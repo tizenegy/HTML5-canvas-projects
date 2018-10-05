@@ -1,13 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<title>HTML5 Canvas - Chess board</title>
-		<script src='chess_board.js'></script>
-	</head>
-	<body onload='draw();'>
-		<div>
-			<canvas id="chess" width="800" height="800"></canvas>
-		</div>
-	</body>
+
+<head>
+	<meta charset="utf-8" />
+	<title>HTML5 Canvas - Chess board</title>
+	<!-- <script src='chess_board.js'></script> -->
+	<script src='chess_board2.js'></script>
+</head>
+
+<body>
+	<h1 id="title">Fuck yeah, chess!</h1>
+	<div>
+		<canvas id="chess" width="800" height="800"></canvas>
+	</div>
+
+	<script>
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					if (oldonload) {
+						oldonload();
+					}
+					func();
+				}
+			}
+		}
+		addLoadEvent(setBoard);
+		addLoadEvent(setPieces);
+		
+	</script>
+
+</body>
+
 </html>
