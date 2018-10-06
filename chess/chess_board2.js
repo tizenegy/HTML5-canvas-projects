@@ -14,210 +14,212 @@ var PAWN = 0,
 	BISHOP = 3,
 	QUEEN = 4,
 	KING = 5,
-	IN_PLAY = 0;
+	IN_PLAY = 0,
+	TAKEN = 1,
+	pieces = null,
+	ctx = null,
+	json = null,
+	canvas = null,
+	BLACK_TEAM = 0,
+	WHITE_TEAM = 1,
+	SELECT_LINE_WIDTH = 5,
+	currentTurn = WHITE_TEAM,
+	selectedPiece = null;
 
-// GAME -----------------------
+function setGame() {
 
-// var TAKEN = 1,
-// pieces = null,
-// ctx = null,
-// json = null,
-// canvas = null,
-// BLACK_TEAM = 0,
-// WHITE_TEAM = 1,
-// SELECT_LINE_WIDTH = 5,
-// currentTurn = WHITE_TEAM,
-// selectedPiece = null;
+	function screenToBlock(x, y) {
+		var block = {
+			"row": Math.floor(y / BLOCK_SIZE),
+			"col": Math.floor(x / BLOCK_SIZE)
+		};
 
-// function screenToBlock(x, y) {
-// 	var block =  {
-// 		"row": Math.floor(y / BLOCK_SIZE),
-// 		"col": Math.floor(x / BLOCK_SIZE)
-// 	};
+		return block;
+	}
 
-// 	return block;
-// }
+	function getPieceAtBlockForTeam(teamOfPieces, clickedBlock) {
 
-// function getPieceAtBlockForTeam(teamOfPieces, clickedBlock) {
+		var curPiece = null,
+			iPieceCounter = 0,
+			pieceAtBlock = null;
 
-// 	var curPiece = null,
-// 		iPieceCounter = 0,
-// 		pieceAtBlock = null;
+		for (iPieceCounter = 0; iPieceCounter < teamOfPieces.length; iPieceCounter++) {
 
-// 	for (iPieceCounter = 0; iPieceCounter < teamOfPieces.length; iPieceCounter++) {
+			curPiece = teamOfPieces[iPieceCounter];
 
-// 		curPiece = teamOfPieces[iPieceCounter];
+			if (curPiece.status === IN_PLAY &&
+				curPiece.col === clickedBlock.col &&
+				curPiece.row === clickedBlock.row) {
+				curPiece.position = iPieceCounter;
 
-// 		if (curPiece.status === IN_PLAY &&
-// 				curPiece.col === clickedBlock.col &&
-// 				curPiece.row === clickedBlock.row) {
-// 			curPiece.position = iPieceCounter;
+				pieceAtBlock = curPiece;
+				iPieceCounter = teamOfPieces.length;
+			}
+		}
 
-// 			pieceAtBlock = curPiece;
-// 			iPieceCounter = teamOfPieces.length;
-// 		}
-// 	}
+		return pieceAtBlock;
+	}
 
-// 	return pieceAtBlock;
-// }
+	function blockOccupiedByEnemy(clickedBlock) {
+		var team = (currentTurn === BLACK_TEAM ? json.white : json.black);
 
-// function blockOccupiedByEnemy(clickedBlock) {
-// 	var team = (currentTurn === BLACK_TEAM ? json.white : json.black);
-
-// 	return getPieceAtBlockForTeam(team, clickedBlock);
-// }
-
-
-// function blockOccupied(clickedBlock) {
-// 	var pieceAtBlock = getPieceAtBlockForTeam(json.black, clickedBlock);
-
-// 	if (pieceAtBlock === null) {
-// 		pieceAtBlock = getPieceAtBlockForTeam(json.white, clickedBlock);
-// 	}
-
-// 	return (pieceAtBlock !== null);
-// }
-
-// function canPawnMoveToBlock(selectedPiece, clickedBlock, enemyPiece) {
-// 	var iRowToMoveTo = (currentTurn === WHITE_TEAM ? selectedPiece.row + 1 : selectedPiece.row - 1),
-// 		bAdjacentEnemy = (clickedBlock.col === selectedPiece.col - 1 ||
-// 					clickedBlock.col === selectedPiece.col + 1) &&
-// 					enemyPiece !== null,
-// 		bNextRowEmpty = (clickedBlock.col === selectedPiece.col &&
-// 					blockOccupied(clickedBlock) === false);
-
-// 	return clickedBlock.row === iRowToMoveTo &&
-// 			(bNextRowEmpty === true || bAdjacentEnemy === true);
-// }
-
-// function canSelectedMoveToBlock(selectedPiece, clickedBlock, enemyPiece) {
-// 	var bCanMove = false;
-
-// 	switch (selectedPiece.piece) {
-
-// 	case PIECE_PAWN:
-
-// 		bCanMove = canPawnMoveToBlock(selectedPiece, clickedBlock, enemyPiece);
-
-// 		break;
-
-// 	case PIECE_CASTLE:
-
-// 		// TODO
-
-// 		break;
-
-// 	case PIECE_ROUKE:
-
-// 		// TODO
-
-// 		break;
-
-// 	case PIECE_BISHOP:
-
-// 		// TODO
-
-// 		break;
-
-// 	case PIECE_QUEEN:
-
-// 		// TODO
-
-// 		break;
-
-// 	case PIECE_KING:
-
-// 		// TODO
-
-// 		break;
-// 	}
-
-// 	return bCanMove;
-// }
-
-// function getPieceAtBlock(clickedBlock) {
-
-// 	var team = (currentTurn === BLACK_TEAM ? json.black : json.white);
-
-// 	return getPieceAtBlockForTeam(team, clickedBlock);
-// }
-
-// function removeSelection(selectedPiece) {
-// 	drawBlock(selectedPiece.col, selectedPiece.row);
-// 	drawPiece(selectedPiece, (currentTurn === BLACK_TEAM));
-// }
-
-// function selectPiece(pieceAtBlock) {
-// 	// Draw outline
-// 	ctx.lineWidth = SELECT_LINE_WIDTH;
-// 	ctx.strokeStyle = HIGHLIGHT_COLOUR;
-// 	ctx.strokeRect((pieceAtBlock.col * BLOCK_SIZE) + SELECT_LINE_WIDTH,
-// 		(pieceAtBlock.row * BLOCK_SIZE) + SELECT_LINE_WIDTH,
-// 		BLOCK_SIZE - (SELECT_LINE_WIDTH * 2),
-// 		BLOCK_SIZE - (SELECT_LINE_WIDTH * 2));
-
-// 	selectedPiece = pieceAtBlock;
-// }
-
-// function checkIfPieceClicked(clickedBlock) {
-// 	var pieceAtBlock = getPieceAtBlock(clickedBlock);
-
-// 	if (pieceAtBlock !== null) {
-// 		selectPiece(pieceAtBlock);
-// 	}
-// }
-
-// function movePiece(clickedBlock, enemyPiece) {
-// 	// Clear the block in the original position
-// 	drawBlock(selectedPiece.col, selectedPiece.row);
-
-// 	var team = (currentTurn === WHITE_TEAM ? json.white : json.black),
-// 		opposite = (currentTurn !== WHITE_TEAM ? json.white : json.black);
-
-// 	team[selectedPiece.position].col = clickedBlock.col;
-// 	team[selectedPiece.position].row = clickedBlock.row;
-
-// 	if (enemyPiece !== null) {
-// 		// Clear the piece your about to take
-// 		drawBlock(enemyPiece.col, enemyPiece.row);
-// 		opposite[enemyPiece.position].status = TAKEN;
-// 	}
-
-// 	// Draw the piece in the new position
-// 	drawPiece(selectedPiece, (currentTurn === BLACK_TEAM));
-
-// 	currentTurn = (currentTurn === WHITE_TEAM ? BLACK_TEAM : WHITE_TEAM);
-
-// 	selectedPiece = null;
-// }
-
-// function processMove(clickedBlock) {
-// 	var pieceAtBlock = getPieceAtBlock(clickedBlock),
-// 		enemyPiece = blockOccupiedByEnemy(clickedBlock);
-
-// 	if (pieceAtBlock !== null) {
-// 		removeSelection(selectedPiece);
-// 		checkIfPieceClicked(clickedBlock);
-// 	} else if (canSelectedMoveToBlock(selectedPiece, clickedBlock, enemyPiece) === true) {
-// 		movePiece(clickedBlock, enemyPiece);
-// 	}
-// }
-
-// function board_click(ev) {
-// 	var x = ev.clientX - canvas.offsetLeft,
-// 		y = ev.clientY - canvas.offsetTop,
-// 		clickedBlock = screenToBlock(x, y);
-
-// 	if (selectedPiece === null) {
-// 		checkIfPieceClicked(clickedBlock);
-// 	} else {
-// 		processMove(clickedBlock);
-// 	}
-// }
+		return getPieceAtBlockForTeam(team, clickedBlock);
+	}
 
 
+	function blockOccupied(clickedBlock) {
+		var pieceAtBlock = getPieceAtBlockForTeam(json.black, clickedBlock);
 
-// board ------------------
+		if (pieceAtBlock === null) {
+			pieceAtBlock = getPieceAtBlockForTeam(json.white, clickedBlock);
+		}
+
+		return (pieceAtBlock !== null);
+	}
+
+	function canPawnMoveToBlock(selectedPiece, clickedBlock, enemyPiece) {
+		var iRowToMoveTo = (currentTurn === WHITE_TEAM ? selectedPiece.row + 1 : selectedPiece.row - 1),
+			bAdjacentEnemy = (clickedBlock.col === selectedPiece.col - 1 ||
+				clickedBlock.col === selectedPiece.col + 1) &&
+				enemyPiece !== null,
+			bNextRowEmpty = (clickedBlock.col === selectedPiece.col &&
+				blockOccupied(clickedBlock) === false);
+
+		return clickedBlock.row === iRowToMoveTo &&
+			(bNextRowEmpty === true || bAdjacentEnemy === true);
+	}
+
+	function canSelectedMoveToBlock(selectedPiece, clickedBlock, enemyPiece) {
+		var bCanMove = false;
+
+		switch (selectedPiece.piece) {
+
+			case PIECE_PAWN:
+
+				bCanMove = canPawnMoveToBlock(selectedPiece, clickedBlock, enemyPiece);
+
+				break;
+
+			case PIECE_CASTLE:
+
+				// TODO
+
+				break;
+
+			case PIECE_ROUKE:
+
+				// TODO
+
+				break;
+
+			case PIECE_BISHOP:
+
+				// TODO
+
+				break;
+
+			case PIECE_QUEEN:
+
+				// TODO
+
+				break;
+
+			case PIECE_KING:
+
+				// TODO
+
+				break;
+		}
+
+		return bCanMove;
+	}
+
+	function getPieceAtBlock(clickedBlock) {
+
+		var team = (currentTurn === BLACK_TEAM ? json.black : json.white);
+
+		return getPieceAtBlockForTeam(team, clickedBlock);
+	}
+
+	function removeSelection(selectedPiece) {
+		drawBlock(selectedPiece.col, selectedPiece.row);
+		drawPiece(selectedPiece, (currentTurn === BLACK_TEAM));
+	}
+
+	function selectPiece(pieceAtBlock) {
+		// Draw outline
+		ctx.lineWidth = SELECT_LINE_WIDTH;
+		ctx.strokeStyle = HIGHLIGHT_COLOUR;
+		ctx.strokeRect((pieceAtBlock.col * BLOCK_SIZE) + SELECT_LINE_WIDTH,
+			(pieceAtBlock.row * BLOCK_SIZE) + SELECT_LINE_WIDTH,
+			BLOCK_SIZE - (SELECT_LINE_WIDTH * 2),
+			BLOCK_SIZE - (SELECT_LINE_WIDTH * 2));
+
+		selectedPiece = pieceAtBlock;
+	}
+
+	function checkIfPieceClicked(clickedBlock) {
+		var pieceAtBlock = getPieceAtBlock(clickedBlock);
+
+		if (pieceAtBlock !== null) {
+			selectPiece(pieceAtBlock);
+		}
+	}
+
+	function movePiece(clickedBlock, enemyPiece) {
+		// Clear the block in the original position
+		drawBlock(selectedPiece.col, selectedPiece.row);
+
+		var team = (currentTurn === WHITE_TEAM ? json.white : json.black),
+			opposite = (currentTurn !== WHITE_TEAM ? json.white : json.black);
+
+		team[selectedPiece.position].col = clickedBlock.col;
+		team[selectedPiece.position].row = clickedBlock.row;
+
+		if (enemyPiece !== null) {
+			// Clear the piece your about to take
+			drawBlock(enemyPiece.col, enemyPiece.row);
+			opposite[enemyPiece.position].status = TAKEN;
+		}
+
+		// Draw the piece in the new position
+		drawPiece(selectedPiece, (currentTurn === BLACK_TEAM));
+
+		currentTurn = (currentTurn === WHITE_TEAM ? BLACK_TEAM : WHITE_TEAM);
+
+		selectedPiece = null;
+	}
+
+	function processMove(clickedBlock) {
+		var pieceAtBlock = getPieceAtBlock(clickedBlock),
+			enemyPiece = blockOccupiedByEnemy(clickedBlock);
+
+		if (pieceAtBlock !== null) {
+			removeSelection(selectedPiece);
+			checkIfPieceClicked(clickedBlock);
+		} else if (canSelectedMoveToBlock(selectedPiece, clickedBlock, enemyPiece) === true) {
+			movePiece(clickedBlock, enemyPiece);
+		}
+	}
+
+	function board_click(ev) {
+		var x = ev.clientX - canvas.offsetLeft,
+			y = ev.clientY - canvas.offsetTop,
+			clickedBlock = screenToBlock(x, y);
+
+		if (selectedPiece === null) {
+			checkIfPieceClicked(clickedBlock);
+		} else {
+			processMove(clickedBlock);
+		}
+	}
+
+	alert ("setgame");
+	canvas = document.getElementById('chess');
+	canvas.addEventListener('click', board_click, false);
+
+}
+
 function setBoard() {
 	function getBlockColour(iRowCounter, iBlockCounter) {
 		var cStartColour;
@@ -281,7 +283,6 @@ function setBoard() {
 }
 
 
-// pieces------------------------
 function setPieces() {
 	function getImageCoords(pieceCode, bBlackTeam) {
 
