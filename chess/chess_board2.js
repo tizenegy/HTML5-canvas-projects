@@ -8,12 +8,12 @@ var BLOCK_COLOUR_1 = '#9f7119',
 
 var piecePositions = null;
 
-var PIECE_PAWN = 0,
-	PIECE_CASTLE = 1,
-	PIECE_ROUKE = 2,
-	PIECE_BISHOP = 3,
-	PIECE_QUEEN = 4,
-	PIECE_KING = 5,
+var PAWN = 0,
+	ROOK = 1,
+	KNIGHT = 2,
+	BISHOP = 3,
+	QUEEN = 4,
+	KING = 5,
 	IN_PLAY = 0;
 
 // GAME -----------------------
@@ -215,7 +215,7 @@ var PIECE_PAWN = 0,
 // 	}
 // }
 
-//-------------------------
+
 
 // board ------------------
 function setBoard() {
@@ -279,7 +279,7 @@ function setBoard() {
 	// Draw the background
 	drawBoard();
 }
-//-------------------------------
+
 
 // pieces------------------------
 function setPieces() {
@@ -308,7 +308,6 @@ function setPieces() {
 
 	function drawTeamOfPieces(teamOfPieces, bBlackTeam) {
 		var iPieceCounter;
-
 		// Loop through each piece and draw it on the canvas	
 		for (iPieceCounter = 0; iPieceCounter < teamOfPieces.length; iPieceCounter++) {
 			drawPiece(teamOfPieces[iPieceCounter], bBlackTeam);
@@ -327,97 +326,97 @@ function setPieces() {
 			"white":
 				[
 					{
-						"piece": PIECE_CASTLE,
+						"piece": ROOK,
 						"row": 0,
 						"col": 0,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_ROUKE,
+						"piece": KNIGHT,
 						"row": 0,
 						"col": 1,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_BISHOP,
+						"piece": BISHOP,
 						"row": 0,
 						"col": 2,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_KING,
+						"piece": KING,
 						"row": 0,
 						"col": 3,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_QUEEN,
+						"piece": QUEEN,
 						"row": 0,
 						"col": 4,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_BISHOP,
+						"piece": BISHOP,
 						"row": 0,
 						"col": 5,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_ROUKE,
+						"piece": KNIGHT,
 						"row": 0,
 						"col": 6,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_CASTLE,
+						"piece": ROOK,
 						"row": 0,
 						"col": 7,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 1,
 						"col": 0,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 1,
 						"col": 1,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 1,
 						"col": 2,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 1,
 						"col": 3,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 1,
 						"col": 4,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 1,
 						"col": 5,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 1,
 						"col": 6,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 1,
 						"col": 7,
 						"status": IN_PLAY
@@ -426,97 +425,97 @@ function setPieces() {
 			"black":
 				[
 					{
-						"piece": PIECE_CASTLE,
+						"piece": ROOK,
 						"row": 7,
 						"col": 0,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_ROUKE,
+						"piece": KNIGHT,
 						"row": 7,
 						"col": 1,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_BISHOP,
+						"piece": BISHOP,
 						"row": 7,
 						"col": 2,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_KING,
+						"piece": KING,
 						"row": 7,
 						"col": 3,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_QUEEN,
+						"piece": QUEEN,
 						"row": 7,
 						"col": 4,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_BISHOP,
+						"piece": BISHOP,
 						"row": 7,
 						"col": 5,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_ROUKE,
+						"piece": KNIGHT,
 						"row": 7,
 						"col": 6,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_CASTLE,
+						"piece": ROOK,
 						"row": 7,
 						"col": 7,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 6,
 						"col": 0,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 6,
 						"col": 1,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 6,
 						"col": 2,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 6,
 						"col": 3,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 6,
 						"col": 4,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 6,
 						"col": 5,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 6,
 						"col": 6,
 						"status": IN_PLAY
 					},
 					{
-						"piece": PIECE_PAWN,
+						"piece": PAWN,
 						"row": 6,
 						"col": 7,
 						"status": IN_PLAY
