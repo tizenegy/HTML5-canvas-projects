@@ -16,6 +16,7 @@ var PAWN = 0,
 	KING = 5,
 	IN_PLAY = 0;
 
+
 // GAME -----------------------
 
 // var TAKEN = 1,
